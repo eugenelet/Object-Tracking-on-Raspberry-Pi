@@ -1,0 +1,9 @@
+EDA NOTES
+
+check current node after node judge
+use controlling value for early termination (false path)
+input -> output (simulation)
+output -> input (logic implication/ backward simulation)
+use controlling path to cut timing
+Work Pool method for multithread
+Array of 4 for every NODE if there're 4 threads :) (eliminate data dependency)
