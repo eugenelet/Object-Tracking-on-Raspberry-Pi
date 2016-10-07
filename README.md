@@ -8,29 +8,29 @@ SIFT is an algorithm that's can point out the location of an object in an image 
 The connection protocol between raspberry pi and our remote machine will be via WiFi.
 
 Using this code, you'll be able to:
-    - Control your vehicle using your keyboard (W,A,S,D)
-    - Real-time detection of object(image) fed into this program
+  - Control your vehicle using your keyboard (W,A,S,D)
+  - Real-time detection of object(image) fed into this program
 
 Requirements
 ------------
 Hardware
-    - Raspberry Pi 2 (You can try porting it to other platforms)
-    - Car chassis
-    - DC Motor
-    - DC Motor Gear Box (this usually comes along with the car chasis)
-    - Tyres 
-    - Step-up regulator L298N 
-    - Ultrasonic Sensor 
-    - 18650 Battery x2
-    - Battery Holder for 18650 batteries
+  - Raspberry Pi 2 (You can try porting it to other platforms)
+  - Car chassis
+  - DC Motor
+  - DC Motor Gear Box (this usually comes along with the car chasis)
+  - Tyres 
+  - Step-up regulator L298N 
+  - Ultrasonic Sensor 
+  - 18650 Battery x2
+  - Battery Holder for 18650 batteries
 Software
-    - Raspberry Pi
-        - V4L2
-        - UV4L
-        - make
-        - g++ (compiling tools)
-    - Remote Machine (Laptop/PC)
-        - make
-        - g++ (compiling tools)
-        - openCV
+  - Raspberry Pi
+    - V4L2
+    - UV4L
+    - make
+    - g++ (compiling tools)
+  - Remote Machine (Laptop/PC)
+    - make
+    - g++ (compiling tools)
+    - openCV
 
