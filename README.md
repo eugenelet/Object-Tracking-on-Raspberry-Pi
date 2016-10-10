@@ -37,4 +37,35 @@ Software
     - g++ (compiling tools)
     - openCV
 
+Usage
+-----
+A Makefile is written, thus to compile we've to run:
+    make
+
+After compiling, an excutable file name **controller** will be generated.
+
+The program can be used in two modes which are single object detection and multi object detection. 
+
+For single object detection, we've to name the target to be detected as **target.jpg** or a simple softlink will do. The image must be in the same directory as the execuatable for it to work.
+
+For mutli object detection, all pictures that needs to be used as target will be placed into the **target** directory. The number of target varies with the resolution of the target and the resolution of your screen. Having 3 targets would usually occupy your whole screen, thus having more targets than that is pretty useless. *The name of the file doesn't matter.*
+
+Once all images to be detected are ready, we can run the executable that we just compiled.
+
+For single object detection, the following command would suffice:
+    ./controller
+
+For multi object detection, we've to run:
+    ./controller multi
+
+When the program is running, there're few operations that we can do.
+
+- Control Vehicle: W,A,S,D
+- Take Picture: P
+- Switch to Next Target: N (only works for multi object detection)
+- Shutdown Raspberry Pi: H
+- Terminate Program: C
+- Help Dialog: H or any key not in the list 
+
+
 ![Alt text](target/jijijin.jpg?raw=true "Optional Title")
