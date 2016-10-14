@@ -1,5 +1,5 @@
 #include "../include/sift.h"
-
+int FILTER_THRESHOLD = 2;
 void mySIFT::filterKeyPoints()
 {
 	for (int i = 0; i < keyPoints.size(); ++i){
@@ -13,7 +13,7 @@ void mySIFT::filterKeyPoints()
 		vector< int > brighter(8, 0);
 		vector< int > darker(8, 0);
 		int value = thisMat.at<uchar>(thisKpt.row, thisKpt.col);
-		int threshold = 7;
+		int threshold = FILTER_THRESHOLD;
 		filterKeyPointsHelper1(brighter, darker, thisMat, thisKpt, value, threshold);
 		int nBrighter, nDarker;
 		filterKeyPointsHelper2(brighter, darker, nBrighter, nDarker);
@@ -59,15 +59,15 @@ void mySIFT::filterKeyPointsHelper1(vector< int >& brighter, vector< int >& dark
 		brighter[1] = 1;
 	if (thisMat.at<uchar>(thisKpt.row - 1, thisKpt.col + 1) > brighterthshod)
 		brighter[2] = 1;
-	if (thisMat.at<uchar>(thisKpt.row, thisKpt.col - 1) > brighterthshod)
-		brighter[3] = 1;
 	if (thisMat.at<uchar>(thisKpt.row, thisKpt.col + 1) > brighterthshod)
-		brighter[4] = 1;
-	if (thisMat.at<uchar>(thisKpt.row + 1, thisKpt.col - 1) > brighterthshod)
-		brighter[5] = 1;
-	if (thisMat.at<uchar>(thisKpt.row + 1, thisKpt.col) > brighterthshod)
-		brighter[6] = 1;
+		brighter[3] = 1;
 	if (thisMat.at<uchar>(thisKpt.row + 1, thisKpt.col + 1) > brighterthshod)
+		brighter[4] = 1;
+	if (thisMat.at<uchar>(thisKpt.row + 1, thisKpt.col) > brighterthshod)
+		brighter[5] = 1;
+	if (thisMat.at<uchar>(thisKpt.row + 1, thisKpt.col - 1) > brighterthshod)
+		brighter[6] = 1;
+	if (thisMat.at<uchar>(thisKpt.row, thisKpt.col - 1) > brighterthshod)
 		brighter[7] = 1;
 
 	//§Ëdarker
@@ -78,15 +78,15 @@ void mySIFT::filterKeyPointsHelper1(vector< int >& brighter, vector< int >& dark
 		darker[1] = 1;
 	if (thisMat.at<uchar>(thisKpt.row - 1, thisKpt.col + 1) < darkerthshod)
 		darker[2] = 1;
-	if (thisMat.at<uchar>(thisKpt.row, thisKpt.col - 1) < darkerthshod)
-		darker[3] = 1;
 	if (thisMat.at<uchar>(thisKpt.row, thisKpt.col + 1) < darkerthshod)
-		darker[4] = 1;
-	if (thisMat.at<uchar>(thisKpt.row + 1, thisKpt.col - 1) < darkerthshod)
-		darker[5] = 1;
-	if (thisMat.at<uchar>(thisKpt.row + 1, thisKpt.col) < darkerthshod)
-		darker[6] = 1;
+		darker[3] = 1;
 	if (thisMat.at<uchar>(thisKpt.row + 1, thisKpt.col + 1) < darkerthshod)
+		darker[4] = 1;
+	if (thisMat.at<uchar>(thisKpt.row + 1, thisKpt.col) < darkerthshod)
+		darker[5] = 1;
+	if (thisMat.at<uchar>(thisKpt.row + 1, thisKpt.col - 1) < darkerthshod)
+		darker[6] = 1;
+	if (thisMat.at<uchar>(thisKpt.row, thisKpt.col - 1) < darkerthshod)
 		darker[7] = 1;
 }
 

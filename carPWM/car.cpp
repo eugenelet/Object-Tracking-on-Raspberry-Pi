@@ -78,8 +78,10 @@ GPIOClass* rearLeft2;
 GPIOClass* rearRight1; 
 GPIOClass* rearRight2;
 
+/* Output Packet to be sent */
 unsigned char output[DATAGRAM_SIZE];
 
+/* Directional movement of vehicle based on user input */
 void idle(){
 	cout<< "IDLE" << endl;
 	gpioWrite(19, 1);
@@ -148,6 +150,8 @@ void right(){
 	gpioWrite(3 , 0);
 	transmit(output);
 }
+
+/* Directional Movement of Vehicle based on tracked object */
 void idlePWM(){
 	cout<< "IDLE" << endl;
 	gpioPWM(19, 255);
@@ -227,21 +231,20 @@ static char* snd_PORT = "10024";
 static char* rcv_PORT="10023";
 static char* IP_ADDR="192.168.0.101";
 
-
+/* Search for Object by Rotating */
 std::mutex mtxLock;
 void* idle_thread(void* arg){
 	unsigned int* idle_counter = (unsigned int*)arg;
 	while(1){
 		cout << "SEARCHING..... " << *idle_counter << endl;
 		mtxLock.lock();
-		(*idle_counter)++;
+		(*idle_counter)++; // increase idle counter when object not found
 		if(*idle_counter == 4){
 			*idle_counter = 0;
 			left();
 			usleep(150000);
 			idle();
 		}
-		// cout << *idle_counter << endl;
 		mtxLock.unlock();
 		usleep(1000000);
 	}
@@ -317,9 +320,9 @@ void sleep(int t) {
 void* ultra_thread(void* arg){
  	unsigned char output_ultra[DATAGRAM_SIZE];
 
- 	output_ultra[0] = ULTRA;
+ 	output_ultra[0] = ULTRA; // Sets Packet Header
 
-	gpioSetMode(ECHO, PI_INPUT);
+	gpioSetMode(ECHO, PI_INPUT); // Initialize pin as input pin
 
 	// register callback on change of sonar pin
 	gpioSetAlertFunc(ECHO, range); 
@@ -330,20 +333,20 @@ void* ultra_thread(void* arg){
 		ping();	// prime the last_range variable
 		// sleep(1);
 		usleep(500000);
+		// Pack OBSTACLE RANGE into a single packet
 		output_ultra[1] = last_range & 0xFF;
 		output_ultra[2] = (last_range >> 8) & 0xFF;
 		output_ultra[3] = (last_range >> 16) & 0xFF;
 		output_ultra[4] = (last_range >> 24) & 0xFF;
-		transmit(output_ultra);
+		transmit(output_ultra); // update controller with the range of object
 	}
  }
 //////////////////////////////////////////////
 
-int requestFlag = 0;
 int main(int argc, char** argv){
     unsigned char* receivedPacket;
     int bytes, opcode;
-    output[0] = ACK;
+    output[0] = ACK; // Initialize output packet header as ACK
     receiver_init(rcv_PORT);
 	transmit_init(IP_ADDR, snd_PORT);
 	if (gpioInitialise() < 0)
@@ -366,12 +369,9 @@ int main(int argc, char** argv){
 	pthread_t idle_t, ultra_t;
 	pthread_create(&idle_t, NULL, idle_thread, &idle_counter);
 	pthread_create(&ultra_t, NULL, ultra_thread, &idle_counter);
-	// thread t(idle_thread, &idle_counter);
-	// thread ultra(ultra_thread);
 
     while(1){
         receivedPacket = receiver();
-        //cout << receivedPacket[0]<<endl;      
         if((receivedPacket[0] == CONTROL)){
             opcode = CONTROL;   
         }
@@ -398,10 +398,6 @@ int main(int argc, char** argv){
                         right();
                     }
 					else if(receivedPacket[1] == SIG_INT){
-						// pthread_t handler = t.native_handle();
-						// pthread_cancel(handler);
-						// handler = ultra.native_handle();
-						// pthread_cancel(handler);
 						if(pthread_cancel(idle_t))
 							cout << "idle_t cancel fail..." << endl;
 						else
@@ -438,13 +434,6 @@ int main(int argc, char** argv){
 						gpioSetMode(3, PI_OUTPUT);
 						pthread_create(&idle_t, NULL, idle_thread, &idle_counter);
 						pthread_create(&ultra_t, NULL, ultra_thread, &idle_counter);
-
-						// thread t(idle_thread, &idle_counter);
-						// thread ultra(ultra_thread);
-						// t.detach();
-						// ultra.detach();
-
-
 					}
 					else if(receivedPacket[1] == SHUTDOWN){
 						system("sudo shutdown now");

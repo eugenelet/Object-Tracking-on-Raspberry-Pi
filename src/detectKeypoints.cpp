@@ -8,8 +8,8 @@ void mySIFT::detectKeypoints()
 	for (int octave = 0; octave < nOctave; ++octave){	
 		for (int layer = octave * nLayersPerOctave + 1; layer < octave * nLayersPerOctave + size - 1; ++layer){//DoGªºlayer
 			//cout << octave << " " << layer << "\n";
-			for (int row = 1; row < DoGs[layer].rows - 1; ++row){//octave * nLayersPerOctave
-				for (int col = 1; col < DoGs[layer].cols - 1; ++col){//¬ÝDoGs[layer]¨º±iªº[row][col]¨ºÂI¬O¤£¬Omax min
+			for (int row = 8; row < DoGs[layer].rows - 9; ++row){//octave * nLayersPerOctave
+				for (int col = 8; col < DoGs[layer].cols - 9; ++col){//¬ÝDoGs[layer]¨º±iªº[row][col]¨ºÂI¬O¤£¬Omax min
 					int value = DoGs[layer].at<int>(row, col);
 					//cout << "value : " << value << " at " << row << ", " << col << "\n";
 					bool isMax = true;
@@ -17,7 +17,8 @@ void mySIFT::detectKeypoints()
 					for (int layerOffset = -1; layerOffset <= 1 && (isMin || isMax); ++layerOffset){
 						for (int i = row - (DOG_DETECT_KPT_SIZE - 1) / 2; i <= row + (DOG_DETECT_KPT_SIZE - 1) / 2 && (isMin || isMax); ++i){
 							for (int j = col - (DOG_DETECT_KPT_SIZE - 1) / 2; j <= col + (DOG_DETECT_KPT_SIZE - 1) / 2 && (isMin || isMax); ++j){
-								if (i >= 0 && j >= 0 && i < DoGs[octave * nLayersPerOctave].rows && j < DoGs[octave * nLayersPerOctave].cols && i != row && j != col){//¦b½d³ò¤ºªº¸Ü
+								if (i >= 0 && j >= 0 && i < DoGs[octave * nLayersPerOctave].rows && j < DoGs[octave * nLayersPerOctave].cols && abs(i - row) + abs(j - col) + abs(layerOffset) == 2){//­  !(layerOffset == 0 && i == row && j == col) i != row && j != col
+								/*if (i >= 0 && j >= 0 && i < DoGs[octave * nLayersPerOctave].rows && j < DoGs[octave * nLayersPerOctave].cols && i != row && j != col){*///¦b½d³ò¤ºªº¸Ü
 									int tester = DoGs[layer + layerOffset].at<int>(i, j);
 									if (tester + 0 >= value)
 										isMax = false;

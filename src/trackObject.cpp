@@ -1,5 +1,10 @@
 #include "../include/sift.h"
 
+#define HIGH_THROUGHPUT 0
+#define HIGH_ACCURACY   1
+
+int MODE = HIGH_ACCURACY;
+extern int FILTER_THRESHOLD;
 extern int distance_obj;
 
 int perimeter = 0;
@@ -11,6 +16,8 @@ bool detectFlag = false;
 bool newUpdate = false;
 int currentPerimeter;
 deque<int*> biasQueue;
+
+void updateFilterThreshold(int mode, mySIFT& left, mySIFT& right);
 
 void trackObject(vector<Point2f> &computed_corners, Mat &result, mySIFT &left, mySIFT &right, int &maxCol){
 
@@ -63,13 +70,14 @@ void trackObject(vector<Point2f> &computed_corners, Mat &result, mySIFT &left, m
     }
     if(fixed_corners.size() != 0){
         //-- Draw lines between the corners (the mapped object in the scene - image_2 )
-                line(result, fixed_corners[0], fixed_corners[1], Scalar(0, 255, 0), 4);
-                line(result, fixed_corners[3], fixed_corners[0], Scalar(0, 255, 0), 4);
-                line(result, fixed_corners[1], fixed_corners[2], Scalar(0, 255, 0), 4);
-                line(result, fixed_corners[2], fixed_corners[3], Scalar(0, 255, 0), 4);
+        line(result, fixed_corners[0], fixed_corners[1], Scalar(0, 255, 0), 4);
+        line(result, fixed_corners[3], fixed_corners[0], Scalar(0, 255, 0), 4);
+        line(result, fixed_corners[1], fixed_corners[2], Scalar(0, 255, 0), 4);
+        line(result, fixed_corners[2], fixed_corners[3], Scalar(0, 255, 0), 4);
     }
     int bias = (fixed_corners[1].x - fixed_corners[0].x)/2 + fixed_corners[0].x;
     if(detectFlag){
+        updateFilterThreshold(HIGH_THROUGHPUT, left, right);
         int biasFromCenter = bias - (maxCol + right.blurredImgs[0].cols/2);
         unsigned char output[DATAGRAM_SIZE];
         output[0] = DETECT;
@@ -93,4 +101,29 @@ void trackObject(vector<Point2f> &computed_corners, Mat &result, mySIFT &left, m
                 cout << "Object too near!" << endl;
         }
     }
+    else
+        updateFilterThreshold(HIGH_ACCURACY, left, right);
+}
+
+void updateFilterThreshold(int mode, mySIFT& left, mySIFT& right){
+    vector< Key_Point >& a = left.keyPoints;
+    vector< Key_Point >& b = right.keyPoints;
+    MODE = mode;
+    if (MODE && b.size() < 1500 || !MODE && b.size() < 100)
+        --FILTER_THRESHOLD;
+    else if (MODE && b.size() > 2000 || !MODE && b.size() > 200)
+        ++FILTER_THRESHOLD;
+
+    switch(MODE){
+        case HIGH_ACCURACY:
+            cout << "MODE: HIGH_ACCURACY  " ;
+            break;
+        case HIGH_THROUGHPUT:
+            cout << "MODE: HIGH_THROUGHPUT:  " ;
+            break;
+        default:
+            cout << "ERROR..." << endl;
+            break;
+    }
+    cout << "FILTER_THRESHOLD: " << FILTER_THRESHOLD << endl;
 }

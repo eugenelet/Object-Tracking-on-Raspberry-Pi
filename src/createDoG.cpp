@@ -78,15 +78,15 @@ Mat mySIFT::GaussianBlur(const Mat& src, double sigma)//input (¹Ï¤ù, sigma),
 	for (int row = 0; row < src.rows; ++row)
 		for (int col = 0; col < src.cols; ++col){//­n¹ïimg[row][col]ªºpixel°µ¼Ò½k
 			double sum = 0.0;
-			double weightSum = 0.0;//0.0
+			// double weightSum = 0.0;//0.0
 			for (int i = row - shift; i <= row + shift; ++i)
 				for (int j = col - shift; j <= col + shift; ++j){
 					if (i >= 0 && j >= 0 && i < src.rows && j < src.cols){
 						sum += src.at<uchar>(i, j) * G_Kernel[i - (row - shift)][j - (col - shift)];
-						weightSum += G_Kernel[i - (row - shift)][j - (col - shift)];
+						// weightSum += G_Kernel[i - (row - shift)][j - (col - shift)];
 					}
 				}
-			output.at<uchar>(row, col) = sum / weightSum;
+			output.at<uchar>(row, col) = sum;// / weightSum;
 			//cout << "sum : " << sum << "   " << (int)output.at<uchar>(row, col) << "\n";
 		}
 	//cout << "Finish Blurring with sigma : " << setprecision(2) << sigma << "\n";

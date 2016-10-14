@@ -1,5 +1,4 @@
 #include "../include/sift.h"
-
 int computeRow(Mat* target, int row){
 	int accuRow = 0;
 	for(int i = 0; i < row; i++)
@@ -17,6 +16,7 @@ int MaxCol(Mat* target, int target_num){
 
 void match_multi(mySIFT* left, mySIFT& right, vector<char*> targetFile, Mat img_scene, int target_num, int target_pick)
 {
+
     Mat* target = new Mat[target_num]; // = imread(targetFile1);//§Ú­n±m¦âªº
 	vector< vector<Key_Point> > a;
 	for(int i = 0; i < target_num; i++){
@@ -25,6 +25,7 @@ void match_multi(mySIFT* left, mySIFT& right, vector<char*> targetFile, Mat img_
 		a.push_back(tmp);
 	}
 	vector< Key_Point >& b  = right.keyPoints;
+
 	
 	Mat find = img_scene;
 	int maxCol = MaxCol(target, target_num);
@@ -48,12 +49,15 @@ void match_multi(mySIFT* left, mySIFT& right, vector<char*> targetFile, Mat img_
 			for (int k = 0; k < b.size(); k++){//¼É¤O¥h±½¨C¤@­Ó¥kÃäªºKey_Point:b[j]
 				double dist = 0;
 				for (int l = 0; l < 32; ++l)
-					dist += (a[i][j].descriptor[l] - b[k].descriptor[l]) * (a[i][j].descriptor[l] - b[k].descriptor[l]);
+					dist += abs(a[i][j].descriptor[l] - b[k].descriptor[l]);// (a[i][j].descriptor[l] - b[k].descriptor[l]) * (a[i][j].descriptor[l] - b[k].descriptor[l]);
 				if (dist < min){//³Ì¤pªº­n³Q¨ú¥N¤F
-					min2 = min;
-					indexMin2 = index;
-					min = dist;
-					index = k;//¥ªÃäi match¨ì¥kÃäindex
+				min2 = min;
+				//indexMin2 = index;
+				min = dist;
+				index = j;//¥ªÃäi match¨ì¥kÃäindex
+				}
+				else if (dist < min2){
+					min2 = dist;
 				}
 			}
 
@@ -61,7 +65,7 @@ void match_multi(mySIFT* left, mySIFT& right, vector<char*> targetFile, Mat img_
 			int G = rand() % 256;
 			int R = rand() % 256;
 
-			if (min < 0.5 * min2){//good matches
+			if (min < 0.72 * min2){//good matches
 				int aScaleNum = a[i][j].layer / left[i].nLayersPerOctave;// == 0) ? 1 : 1.6;
 				double aScaling = 1;
 				for (int k = 0; k < aScaleNum; ++k){
@@ -172,6 +176,7 @@ void match(mySIFT& left, mySIFT& right, string targetFile, Mat img_scene, clock_
 	vector< Key_Point >& a = left.keyPoints;
 	vector< Key_Point >& b = right.keyPoints;
 	
+
 	Mat target = imread(targetFile);//§Ú­n±m¦âªº
 	Mat find = img_scene;
 	Mat result = concat2Img(target, find);
@@ -190,12 +195,15 @@ void match(mySIFT& left, mySIFT& right, string targetFile, Mat img_scene, clock_
 		for (int j = 0; j < b.size(); ++j){//¼É¤O¥h±½¨C¤@­Ó¥kÃäªºKey_Point:b[j]
 			double dist = 0;
 			for (int k = 0; k < 32; ++k)
-				dist += (a[i].descriptor[k] - b[j].descriptor[k]) * (a[i].descriptor[k] - b[j].descriptor[k]);
+				dist += abs(a[i].descriptor[k] - b[j].descriptor[k]);//(a[i].descriptor[k] - b[j].descriptor[k]) * (a[i].descriptor[k] - b[j].descriptor[k]);
 			if (dist < min){//³Ì¤pªº­n³Q¨ú¥N¤F
 				min2 = min;
-				indexMin2 = index;
+				//indexMin2 = index;
 				min = dist;
 				index = j;//¥ªÃäi match¨ì¥kÃäindex
+			}
+			else if (dist < min2){
+				min2 = dist;
 			}
 		}
 		//circle(garha, Point(a[i].col, a[i].row), 3, Scalar(0, 0, 255));
@@ -209,7 +217,7 @@ void match(mySIFT& left, mySIFT& right, string targetFile, Mat img_scene, clock_
 		int G = rand() % 256;
 		int R = rand() % 256;
 
-		if (min < 0.5 * min2){//good matches
+		if (min < 0.72 * min2){//good matches
 			int aScaleNum = a[i].layer / left.nLayersPerOctave;// == 0) ? 1 : 1.6;
 			double aScaling = 1;
 			for (int k = 0; k < aScaleNum; ++k){
