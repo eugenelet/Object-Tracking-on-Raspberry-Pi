@@ -4,6 +4,78 @@
 		"selected_items":
 		[
 			[
+				"bre",
+				"breakFlag"
+			],
+			[
+				"brea",
+				"breakFlag"
+			],
+			[
+				"break",
+				"breakDetect"
+			],
+			[
+				"forwa",
+				"forward_t"
+			],
+			[
+				"forwar",
+				"forwardPWM"
+			],
+			[
+				"op",
+				"opcodeLock"
+			],
+			[
+				"opcode",
+				"opcodeLock"
+			],
+			[
+				"breakD",
+				"breakDetect"
+			],
+			[
+				"breakDe",
+				"breakDetectLock"
+			],
+			[
+				"recv_t",
+				"recv_thread"
+			],
+			[
+				"idle",
+				"idle_counter"
+			],
+			[
+				"HIGH",
+				"HIGH_THROUGHPUT"
+			],
+			[
+				"HIg",
+				"HIGH_THROUGHPUT"
+			],
+			[
+				"cur",
+				"currentMode"
+			],
+			[
+				"Ma",
+				"Mat\tMat"
+			],
+			[
+				"open",
+				"opencv2"
+			],
+			[
+				"for",
+				"forv\tVector For Loop"
+			],
+			[
+				"update",
+				"updateFilterThreshold"
+			],
+			[
 				"ba",
 				"ballY-ballObj"
 			],
@@ -228,10 +300,6 @@
 				"biasQueue"
 			],
 			[
-				"cur",
-				"currentBias"
-			],
-			[
 				"bias",
 				"biasQueue"
 			],
@@ -446,74 +514,6 @@
 			[
 				"total",
 				"totalConnectedNets"
-			],
-			[
-				"connect",
-				"connectedNets"
-			],
-			[
-				"connec",
-				"connectNets"
-			],
-			[
-				"coor_",
-				"coor_x2"
-			],
-			[
-				"block",
-				"blockName"
-			],
-			[
-				"report",
-				"reportPolishTree"
-			],
-			[
-				"wire",
-				"wireCost"
-			],
-			[
-				"rand",
-				"randTemp"
-			],
-			[
-				"not",
-				"notFoundFlag"
-			],
-			[
-				"pol",
-				"polishExpression"
-			],
-			[
-				"left",
-				"leftNode"
-			],
-			[
-				"old",
-				"oldTotal"
-			],
-			[
-				"ballo",
-				"ballotOperator"
-			],
-			[
-				"node",
-				"node1_num"
-			],
-			[
-				"push",
-				"push_back"
-			],
-			[
-				"brea",
-				"breakFlag"
-			],
-			[
-				"termi",
-				"terminals"
-			],
-			[
-				"termin",
-				"terminalName"
 			]
 		]
 	},
@@ -529,15 +529,6 @@
 			}
 		},
 		{
-			"file": "include/sift.h",
-			"settings":
-			{
-				"buffer_size": 4398,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
 			"file": "src/detectKeypoints.cpp",
 			"settings":
 			{
@@ -547,28 +538,57 @@
 			}
 		},
 		{
-			"file": "src/filterKeyPoints.cpp",
+			"contents": "Package Control Messages\n========================\n\nEasyClangComplete\n-----------------\n\n  ############################################\n  ## Breaking change! Change your settings! ##\n  ############################################\n  - NO MORE `include_dirs`, `std_flag_c`, `std_flag_cpp` SETTINGS!\n      + use `common_flags`, `c_flags` and `cpp_flags` instead\n      + to specify include paths, use `-I<include_path>` in `common_flags`\n      + specify `-std=*` flags in `c_flags` and/or `cpp_flags`\n      + see updated default settings for an example\n  \n  We think this adds flexibility and we didn't want to keep old setting for the\n  sake of clarity.\n  \n  Don't forget to restart Sublime Text after changing settings in case something\n  is not working.\n  \n  ###########################\n  # Big update. What's new? #\n  ###########################\n  - `libclang` way should be working on Windows with `clang` version >= 3.9\n  - override any plugin setting from project-specific settings\n  - completions can be triggered from any place (e.g. in the middle of words)\n    with default sublime auto completion keyboard shortcut\n  - completions will not be shown if you continue on typing for those rare slow\n    completion requests.\n  - new wildcard for `common_flags`: `$clang_version`. Allows for generic include\n    folder for any version of clang\n  - fixed a bunch of crashes and deadlocks, improved overall concurrency support\n  - overall code base improvements and many-many bug fixes\n  \n  ## Thanks ##\n  Huge thanks go to all the people who contributed their time helping me in\n  creating this plugin.\n  @tastytea, @alpo, @randy3k and most of all @rchl, thank you guys for all the\n  help, valuable discussions and pull requests! You guys rock!\n  \n  It is really important for me that you are using the plugin. If you like it -\n  tell other people about it and/or support it:\n  https://github.com/niosus/EasyClangComplete#support-it\n  \n  If you have problems - submit issues and we will eventually solve them\n  together.\n  \n  If you are a developer and care to contribute - you are very welcome!\n\n\nMaterial Theme\n--------------\n\n  #### Material Theme for Sublime Text 3\n  \n  ## Version 4.0.1\n  \n  📣 **BUGFIXES**:\n    * Fix minimap viewport opacity ([a82b6b3](https://github.com/equinusocio/material-theme/commit/a82b6b3))\n    * Fix PlainTasks and PlainNotes support ([4e3d7d9](https://github.com/equinusocio/material-theme/commit/4e3d7d9))\n    * Fix scrollbars black border with \"overlay_scroll_bars\": \"disabled\" ([c3f53b2](https://github.com/equinusocio/material-theme/commit/c3f53b2)), closes [#1012](https://github.com/equinusocio/material-theme/issues/1012)\n    * Fix tabset spacing ([1364e5c](https://github.com/equinusocio/material-theme/commit/1364e5c)), closes [#1008](https://github.com/equinusocio/material-theme/issues/1008)\n  \n  \n  📣 **FEATURES**:\n  \n    * New \"material_theme_bright_scrollbars\" and \"material_theme_accent_scrollbars\" ([0038542](https://github.com/equinusocio/material-theme/commit/0038542)), closes [#1016](https://github.com/equinusocio/material-theme/issues/1016)\n  \n  \n  \n  ☢️ **************************************************************\n      After update, and before open a new \"already-closed\" issue run:\n      **\"Package Control: Satisfy Dependencies\"**\n  ☢️ **************************************************************\n  \n  ** Check the official changelog ( https://github.com/equinusocio/material-theme/blob/master/CHANGELOG.md  ) **\n",
 			"settings":
 			{
-				"buffer_size": 4569,
+				"buffer_size": 3476,
+				"line_ending": "Unix",
+				"name": "Package Control Messages",
+				"read_only": true,
+				"scratch": true
+			}
+		},
+		{
+			"file": "src/trackObject.cpp",
+			"settings":
+			{
+				"buffer_size": 5215,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "src/computeDescriptor.cpp",
+			"file": "src/controller.cpp",
 			"settings":
 			{
-				"buffer_size": 1672,
+				"buffer_size": 11143,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "src/match.cpp",
+			"file": "include/sift.h",
 			"settings":
 			{
-				"buffer_size": 10934,
+				"buffer_size": 4580,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "carPWM/car.cpp",
+			"settings":
+			{
+				"buffer_size": 11510,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "carPWM/honk.cpp",
+			"settings":
+			{
+				"buffer_size": 339,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -581,10 +601,18 @@
 	"build_varint": "",
 	"command_palette":
 	{
-		"height": 112.0,
-		"last_filter": "insta",
+		"height": 173.0,
+		"last_filter": "install",
 		"selected_items":
 		[
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"package",
+				"Package Control: Disable Package"
+			],
 			[
 				"insta",
 				"Package Control: Install Package"
@@ -592,10 +620,6 @@
 			[
 				"text",
 				"Text Pastry: Menu"
-			],
-			[
-				"install",
-				"Package Control: Install Package"
 			],
 			[
 				"text ",
@@ -614,7 +638,7 @@
 				"Package Control: Discover Packages"
 			]
 		],
-		"width": 449.0
+		"width": 431.0
 	},
 	"console":
 	{
@@ -636,11 +660,16 @@
 	"expanded_folders":
 	[
 		"/home/gene/Documents/NCTU/Project/carSIFT",
+		"/home/gene/Documents/NCTU/Project/carSIFT/carPWM",
 		"/home/gene/Documents/NCTU/Project/carSIFT/include",
 		"/home/gene/Documents/NCTU/Project/carSIFT/src"
 	],
 	"file_history":
 	[
+		"/home/gene/Documents/NCTU/Project/carSIFT/src/filterKeyPoints.cpp",
+		"/home/gene/Documents/NCTU/Project/carSIFT/src/computeDescriptor.cpp",
+		"/home/gene/Documents/NCTU/Project/carSIFT/src/match.cpp",
+		"/home/gene/.config/sublime-text-3/Packages/EasyClangComplete/EasyClangComplete.sublime-settings",
 		"/home/gene/Documents/HackNTU/GameDesign/main.cpp",
 		"/home/gene/Documents/HackNTU/GameDesign/movingObject.cpp",
 		"/home/gene/Documents/HackNTU/GameDesign/main.h",
@@ -764,11 +793,7 @@
 		"/home/gene/Public/jailhouse/hypervisor/arch/arm/mmu_cell.c",
 		"/home/gene/Documents/NCTU/Year3Sem2/Computer_Organization/CO-FP-2016/bns.c",
 		"/home/gene/Documents/NCTU/Year3Sem2/EDA/EDAmidterm/main.cpp",
-		"/home/gene/Documents/NCTU/Project/raspCarVid/controller/controller.cpp.bak",
-		"/home/gene/Documents/C++/OpenCV/main.cpp",
-		"/home/gene/Documents/NCTU/Year3Sem2/EDA/qtPA2/main.",
-		"/home/gene/Documents/NCTU/Year3Sem2/EDA/PA2/main.cpp",
-		"/home/gene/Documents/NCTU/Year3Sem2/Global_Issues/final_outline.txt"
+		"/home/gene/Documents/NCTU/Project/raspCarVid/controller/controller.cpp.bak"
 	],
 	"find":
 	{
@@ -788,6 +813,31 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"breakDetect",
+			"breakF",
+			"breakDetect",
+			"breakDete",
+			"breakD",
+			"receivedPacket",
+			"FORWA",
+			"breakDete",
+			"breakFl",
+			"breakF",
+			"breakFlag",
+			"flag",
+			"receivedPacket",
+			"opcode",
+			"hoho",
+			"serverP",
+			"int",
+			"remoteS",
+			"localS",
+			"distanc",
+			"counter",
+			"doneF",
+			"sokt",
+			"MODE",
+			"requestFlag",
 			"FILTER_THRESHOLD",
 			"print",
 			"cout",
@@ -890,13 +940,7 @@
 			"computeArea",
 			"->node",
 			"block",
-			"computeCost",
-			"computeC",
-			"update",
-			"computeCost",
-			"computeC",
-			"blocks",
-			"ctrl+alt+d"
+			"computeCost"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -904,6 +948,7 @@
 		"regex": false,
 		"replace_history":
 		[
+			"siftObject",
 			"bfs_nodes",
 			"TEMP_ODD",
 			"left.blurredImgs[0]",
@@ -925,7 +970,7 @@
 	"groups":
 	[
 		{
-			"selected": 5,
+			"selected": 6,
 			"sheets":
 			[
 				{
@@ -950,44 +995,15 @@
 							"syntax": "Packages/C++/C++.sublime-syntax",
 							"translate_tabs_to_spaces": false
 						},
-						"translation.x": -0.0,
+						"translation.x": 0.0,
 						"translation.y": 576.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 3,
+					"stack_index": 7,
 					"type": "text"
 				},
 				{
 					"buffer": 1,
-					"file": "include/sift.h",
-					"semi_transient": true,
-					"settings":
-					{
-						"buffer_size": 4398,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1800,
-								1800
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.sublime-syntax",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 1656.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 2,
-					"type": "text"
-				},
-				{
-					"buffer": 2,
 					"file": "src/detectKeypoints.cpp",
 					"semi_transient": false,
 					"settings":
@@ -999,8 +1015,8 @@
 						"selection":
 						[
 							[
-								1508,
-								1508
+								4013,
+								4013
 							]
 						],
 						"settings":
@@ -1009,27 +1025,117 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 360.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 5,
 					"type": "text"
 				},
 				{
-					"buffer": 3,
-					"file": "src/filterKeyPoints.cpp",
+					"buffer": 2,
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 4569,
+						"buffer_size": 3476,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								54,
-								54
+								3476,
+								3476
+							]
+						],
+						"settings":
+						{
+							"auto_indent": false,
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"tab_width": 2,
+							"word_wrap": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 6,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "src/trackObject.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5215,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3353,
+								3353
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 2211.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "src/controller.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 11143,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3423,
+								3423
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 2217.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "include/sift.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 4580,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3650,
+								3650
 							]
 						],
 						"settings":
@@ -1038,68 +1144,66 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 2767.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 1,
 					"type": "text"
 				},
 				{
-					"buffer": 4,
-					"file": "src/computeDescriptor.cpp",
+					"buffer": 6,
+					"file": "carPWM/car.cpp",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1672,
+						"buffer_size": 11510,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								724,
-								724
+								3866,
+								3866
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/C++/C++.sublime-syntax",
-							"translate_tabs_to_spaces": false
+							"syntax": "Packages/C++/C++.sublime-syntax"
 						},
 						"translation.x": 0.0,
-						"translation.y": 648.0,
+						"translation.y": 4680.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 4,
+					"stack_index": 0,
 					"type": "text"
 				},
 				{
-					"buffer": 5,
-					"file": "src/match.cpp",
+					"buffer": 7,
+					"file": "carPWM/honk.cpp",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 10934,
+						"buffer_size": 339,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								71,
-								71
+								248,
+								248
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/C++/C++.sublime-syntax",
-							"translate_tabs_to_spaces": false
+							"syntax": "Packages/C++/C++.sublime-syntax"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 4,
 					"type": "text"
 				}
 			]
@@ -1148,7 +1252,7 @@
 	"project": "controllerJack.sublime-project",
 	"replace":
 	{
-		"height": 58.0
+		"height": 114.0
 	},
 	"save_all_on_build": true,
 	"select_file":

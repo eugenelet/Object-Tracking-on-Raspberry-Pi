@@ -56,6 +56,7 @@
 #define RIGHT   0x04
 #define SIG_INT 0x05
 #define SHUTDOWN 0x06
+#define HONK	0x07
 
 /**************************
         VIDEO
@@ -66,6 +67,13 @@
 #define STOP    0x03
 #define SENT    0x04
 
+
+/**************************
+        OPERATING MODE
+***************************/
+#define	AUTO					0
+#define HIGH_THROUGHPUT_MANUAL	1
+#define HIGH_ACCURACY_MANUAL	2
 
 /**************************
         SIFT TOOLS

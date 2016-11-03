@@ -11,23 +11,19 @@
 using namespace cv;
 using namespace std;
 
-int sokt;
-
-int localSocket;
-int remoteSocket;
-int serverPort;
-int doneFlag = 1;
-int counter = 0;
+/* Network Configurations */
 static char* snd_PORT="10023";
 static char* rcv_PORT="10024";
 //static char* IP_ADDR="127.0.0.1";
 static char* IP_ADDR="192.168.0.100";
 
-/////////////////////////////////////////////////////////////////
+/* Working Mode (Adaptive Threshold) */
+int currentMode = AUTO;
+
+/* Ultrasonic Configurations */
 int distance_obj = 0;
-/////////////////////////////////////////////////////////////////
 
-
+/* System Signal Interupt */
 bool sigIntFlag = false;
 
 void sigint(int a){
@@ -115,6 +111,13 @@ void* getch_thread(void* arg){
                 }
                 break;
             }
+            case 'k':{
+                cout <<"HONK!"<<endl;
+                output[0] = CONTROL;
+                output[1] = HONK;
+                transmit(output);
+                break;
+            }
             case 'c':{
 				pthread_exit(0);
                 break;
@@ -137,6 +140,11 @@ void* getch_thread(void* arg){
                 pthread_mutex_unlock(&target_mutex);
                 break;
             }
+            case 'm':{
+                wrongKey = true;
+                currentMode = (currentMode + 1)%3;
+                break;
+            }
             case 'p':{
                 char* saveFile = "snapshot.jpg";
                 wrongKey = true;
@@ -155,7 +163,9 @@ void* getch_thread(void* arg){
                     "P to take snapshot."<<endl <<
                     "N to pick next target. (Multi Target)"<<endl <<
 					"C to terminate program."<<endl <<
-					"H to Shutdown Pi." << endl;
+					"H to Shutdown Pi." << endl <<
+                    "M to Toggle Threshold Adjustment Mode." << endl <<
+                    "N to Choose Next Target in Multi Tracking Mode." << endl;
 				cout << "================================" << endl;
 				cout <<"\n\n\n\n" ;
                 wrongKey = true;
@@ -298,12 +308,6 @@ int main(int argc, char* argv[])
     if(multi_on){
         for(int i = 0; i < *target_num; i++){
             sift_target[i] = mySIFT(1.414, 1.414, 3);//sigma k
-            // sprintf(buffer, "%d", i);
-            // char * tmp = (char *) malloc(1 + strlen(str1) + strlen(buffer) + strlen(str2) );
-            // strcpy(tmp, str1);
-            // strcat(tmp, buffer);
-            // strcat(tmp, str2);
-            // targetFile[i] = tmp;
             target[i] = imread(dirContent[i], CV_LOAD_IMAGE_GRAYSCALE);
             computeSift(sift_target[i], target[i], imread(dirContent[i]), time_on);
         }
@@ -336,19 +340,18 @@ int main(int argc, char* argv[])
         // cap >> img_scene;
         clock_t start, end;
 
-        mySIFT hoho(1.414, 1.414, 1);//sigma k
-        //hoho.LoadImage(imageName2);
+        mySIFT siftObject(1.414, 1.414, 1);//sigma k
         Mat imgScene;
         cvtColor(img_scene, imgScene, CV_BGR2GRAY);
-        computeSift(hoho, imgScene, img_scene, time_on);
+        computeSift(siftObject, imgScene, img_scene, time_on);
         //start = clock();
         if(multi_on){
             pthread_mutex_lock(&target_mutex);
-            match_multi(sift_target, hoho, dirContent, img_scene, *target_num, *target_pick);
+            match_multi(sift_target, siftObject, dirContent, img_scene, *target_num, *target_pick);
             pthread_mutex_unlock(&target_mutex);
         }
         else
-            match(sift_target[0], hoho, targetFile, img_scene, s);
+            match(sift_target[0], siftObject, targetFile, img_scene, s);
 
         //end = clock();
         //cout << "Match : " << (double)(end - s) / CLOCKS_PER_SEC << "\n";
@@ -359,10 +362,8 @@ int main(int argc, char* argv[])
     return 0;
 }
 
+/* Loads image into blurred image vector */
 void mySIFT::LoadImage(Mat imgOri)
 {
-    blurredImgs.push_back(imgOri);//­ì¹Ï¬O©ñindex0
+    blurredImgs.push_back(imgOri);
 }
-
-
-	

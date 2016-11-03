@@ -3,10 +3,19 @@
 #define HIGH_THROUGHPUT 0
 #define HIGH_ACCURACY   1
 
+/* Mode for Auto Adjustment*/
 int MODE = HIGH_ACCURACY;
+
+/* System Filter Threshold */
 extern int FILTER_THRESHOLD;
+
+/* Feedback from Ultrasonic Sensor*/
 extern int distance_obj;
 
+/* System Mode for Threhsold (AUTO/MANUAL) */
+extern int currentMode;
+
+/* Validity of Target */
 int perimeter = 0;
 int biasX = 0;
 vector<int> accuPerimeter;
@@ -108,10 +117,19 @@ void trackObject(vector<Point2f> &computed_corners, Mat &result, mySIFT &left, m
 void updateFilterThreshold(int mode, mySIFT& left, mySIFT& right){
     vector< Key_Point >& a = left.keyPoints;
     vector< Key_Point >& b = right.keyPoints;
-    MODE = mode;
-    if (MODE && b.size() < 1500 || !MODE && b.size() < 100)
+    if(currentMode == AUTO)
+        MODE = mode;
+    else{
+        cout << "MANUAL| ";
+        if(currentMode == HIGH_ACCURACY_MANUAL)
+            MODE = HIGH_ACCURACY;
+        else if(currentMode == HIGH_THROUGHPUT_MANUAL)
+            MODE = HIGH_THROUGHPUT;
+    }   
+
+    if ((MODE && b.size() < 1500) || (!MODE && b.size() < 100))
         --FILTER_THRESHOLD;
-    else if (MODE && b.size() > 2000 || !MODE && b.size() > 200)
+    else if ((MODE && b.size() > 2000) || (!MODE && b.size() > 200))
         ++FILTER_THRESHOLD;
 
     switch(MODE){

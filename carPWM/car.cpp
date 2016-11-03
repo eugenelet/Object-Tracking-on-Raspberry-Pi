@@ -36,6 +36,7 @@ using namespace std;
 #define DETECT  0x02
 #define ULTRA   0x03
 #define ACK     0x04
+#define	DUMMY	0x05
 
 /*************************************
         FUNCTION
@@ -52,6 +53,7 @@ using namespace std;
 #define RIGHT   0x04
 #define SIG_INT 0x05
 #define SHUTDOWN 0x06
+#define HONK 	0x07
 
 /**************************
         VIDEO
@@ -65,10 +67,23 @@ using namespace std;
 #define TRIG 23
 #define ECHO 24
 
-////////////////////
+/* Ultrasonic */
 int last_range = 0;	     // last sonar reading
+
+/* Interrupt from ultrasonic to movement of car */
+bool breakFlag = false;
+std::mutex breakLock;
+
+/* Interrupt from Control to Autonomous Driving */
+bool breakDetect = false;
+std::mutex breakDetectLock;
 ////////////////////
 
+int opcode = DUMMY;
+std::mutex opcodeLock;
+
+unsigned char* receivedPacket;
+/*
 GPIOClass* frontLeft1; 
 GPIOClass* frontLeft2;
 GPIOClass* frontRight1;
@@ -76,7 +91,7 @@ GPIOClass* frontRight2;
 GPIOClass* rearLeft1;
 GPIOClass* rearLeft2;
 GPIOClass* rearRight1; 
-GPIOClass* rearRight2;
+GPIOClass* rearRight2;*/
 
 /* Output Packet to be sent */
 unsigned char output[DATAGRAM_SIZE];
@@ -94,9 +109,21 @@ void idle(){
 	gpioWrite(3 , 1);
 
 }
+void *honk_thread(void* arg){
+	cout << "HONK" << endl;
+
+	int honkDuration = 10;
+	for(int i = 0; i < honkDuration; i++){
+		gpioWrite(21, 1);
+		usleep(7000);
+		gpioWrite(21, 0);
+		usleep(7000);
+	}
+	transmit(output);
+}
 
 void forward(){
-	if(last_range>15){
+	if(!breakFlag){
 		cout << "FORWARD" << endl;
 		gpioWrite(19, 0);
 		gpioWrite(26, 1);
@@ -166,13 +193,18 @@ void idlePWM(){
 }
 
 void forwardPWM(){
-	if(last_range>15){
+
+	if(!(breakFlag || breakDetect) ){
 		cout << "FORWARD" << endl;
 		gpioPWM(19, 200);
 		gpioPWM(4 , 200);
 		gpioPWM(6 , 200);
 		gpioPWM(2 , 200);
-		usleep(900000);
+		for(int i = 0; i < 9; i++){
+			if(breakFlag || breakDetect)
+				break;
+			usleep(30000);
+		}
 	}
 	else
 		cout << "Too Near!" << endl;
@@ -223,8 +255,6 @@ void rightPWM(){
 
 	transmit(output);
 }
-
-
 
 
 static char* snd_PORT = "10024"; 
@@ -285,7 +315,7 @@ void ping(void) {     // send out an ultrasonic 'ping'
 void range(int gpio, int level, uint32_t tick) {
 
    static uint32_t startTick, endTick;
-   
+   pthread_t honk_t;
    uint32_t diffTick;
 
    if (tick>before) { // make sure we don't measure trigger pulse
@@ -299,6 +329,15 @@ void range(int gpio, int level, uint32_t tick) {
          diffTick = (endTick - startTick)/58;
 
          last_range = diffTick;
+
+         breakLock.lock();
+         if(last_range>15)
+         	breakFlag = false;
+         else{
+         	breakFlag = true;
+			pthread_create(&honk_t, NULL, honk_thread, NULL);
+         }
+         breakLock.unlock();
 
          if (diffTick < 600)
             printf("%u\n", diffTick);
@@ -316,7 +355,7 @@ void sleep(int t) {
   gpioSleep(PI_TIME_RELATIVE, t, 0);
 }
 
-
+/* Thread for ultrasonic sensor */
 void* ultra_thread(void* arg){
  	unsigned char output_ultra[DATAGRAM_SIZE];
 
@@ -341,11 +380,33 @@ void* ultra_thread(void* arg){
 		transmit(output_ultra); // update controller with the range of object
 	}
  }
+
+/* Thread to receive command from Controller */
+ void* forward_thread(void* arg){
+	
+    if((receivedPacket[1] == FORWARD)){
+		// pthread_create(&forward_t, NULL, forward_thread, &idle_counter);
+		forwardPWM();
+    }
+    else if((receivedPacket[1] == BACK)){
+        backPWM();
+    }
+    else if((receivedPacket[1] == LEFT)){
+        leftPWM();
+    }
+    else if((receivedPacket[1] == RIGHT)){
+        rightPWM();
+    }
+    else {
+        idlePWM();
+    }
+	// usleep(20000);
+	idlePWM();
+ }
 //////////////////////////////////////////////
 
 int main(int argc, char** argv){
-    unsigned char* receivedPacket;
-    int bytes, opcode;
+    int bytes;
     output[0] = ACK; // Initialize output packet header as ACK
     receiver_init(rcv_PORT);
 	transmit_init(IP_ADDR, snd_PORT);
@@ -364,21 +425,27 @@ int main(int argc, char** argv){
 	gpioSetMode(13, PI_OUTPUT);
 	gpioSetMode(2, PI_OUTPUT);
 	gpioSetMode(3, PI_OUTPUT);
+	gpioSetMode(21, PI_OUTPUT);
 
 	unsigned int idle_counter = 0;
-	pthread_t idle_t, ultra_t;
+	pthread_t idle_t, ultra_t, forward_t, honk_t;
 	pthread_create(&idle_t, NULL, idle_thread, &idle_counter);
 	pthread_create(&ultra_t, NULL, ultra_thread, &idle_counter);
-
     while(1){
-        receivedPacket = receiver();
-        if((receivedPacket[0] == CONTROL)){
-            opcode = CONTROL;   
-        }
-		else if(receivedPacket[0] == DETECT){
+    	// if (opcode == DUMMY)
+    		// continue;
+
+	    receivedPacket = receiver();
+	    if((receivedPacket[0] == CONTROL)){
+	    	breakDetect = true;
+	        opcode = CONTROL;   
+	    }
+		else if(receivedPacket[0] == DETECT)
 			opcode = DETECT;
-		}
-        else{opcode = NULL;}
+	    else
+	    	opcode = NULL;
+        
+		pthread_join(forward_t, NULL);
 
         switch(opcode){
             case CONTROL:{
@@ -396,6 +463,9 @@ int main(int argc, char** argv){
                     }
                     else if((receivedPacket[1] == RIGHT)){
                         right();
+                    }
+                    else if((receivedPacket[1] == HONK)){
+						pthread_create(&honk_t, NULL, honk_thread, &idle_counter);
                     }
 					else if(receivedPacket[1] == SIG_INT){
 						if(pthread_cancel(idle_t))
@@ -432,6 +502,7 @@ int main(int argc, char** argv){
 						gpioSetMode(13, PI_OUTPUT);
 						gpioSetMode(2, PI_OUTPUT);
 						gpioSetMode(3, PI_OUTPUT);
+						gpioSetMode(21, PI_OUTPUT);
 						pthread_create(&idle_t, NULL, idle_thread, &idle_counter);
 						pthread_create(&ultra_t, NULL, ultra_thread, &idle_counter);
 					}
@@ -444,30 +515,15 @@ int main(int argc, char** argv){
 					usleep(20000);
 					idle();
                     
+                    breakDetect = false;
                     break;  
                 }
             case DETECT:{
             		mtxLock.lock();
             		idle_counter = 0;
             		mtxLock.unlock();
-                    if((receivedPacket[1] == FORWARD)){
-       		        	forwardPWM();
-                    }
-                    else if((receivedPacket[1] == BACK)){
-                        backPWM();
-                    }
-                    else if((receivedPacket[1] == LEFT)){
-                        leftPWM();
-                    }
-                    else if((receivedPacket[1] == RIGHT)){
-                        rightPWM();
-                    }
-                    else {
-                        idlePWM();
-                    }
-					usleep(20000);
-					idlePWM();
-                    
+    				pthread_create(&forward_t, NULL, forward_thread, &idle_counter);
+
                     break;  
                 }
 
